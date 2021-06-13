@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "INLINE_RUNTIME_CHUNK=false TSC_COMPILE_ON_ERROR=true craco build"
+		}
+	]
+}
