@@ -6,9 +6,10 @@ import Extension from "./components/Extenson";
 import Viewer from "./components/Viewer";
 
 function App() {
-  const onExtension = useMemo(() => {
-    return window.location.href.includes('http://localhost/');
-  }, []);
+  const onExtension = useMemo(
+    () => !window.location.href.includes("localhost"),
+    []
+  );
   return <div className="App">{onExtension ? <Extension /> : <Viewer />}</div>;
 }
 
