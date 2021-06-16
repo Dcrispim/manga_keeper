@@ -6,6 +6,7 @@ import { MangaListType, MangaType } from "../../types/MangasTypes";
 import { getHost } from "../../utils";
 import { getThumb } from "../../utils/services";
 import { parseTitle } from "../../utils/text";
+import Details from "../Details";
 import {
   Grid,
   PopUpContainer,
@@ -34,12 +35,16 @@ const PopUp: React.FC<Props> = ({
   const [focus, setFocus] = useState<MangaType & { title: string }>({});
 
   return (
+    <>
+      {hasDetails ? (
+        <Details
+          onBack={handleBackFromDetails}
+          info={details}
+          handleLinkManga={handleLinkManga}
+          handleRemoveManga={handleRemoveManga}
+        />
+      ) : (
     <PopUpContainer>
-      <Grid>
-        <h2>{parseTitle(focus.title || "")}</h2>
-        <h2>{focus.lastCap}</h2>
-        <h2>{focus.highCap}</h2>
-      </Grid>
       <SliderContainer>
         {Object.keys(mangas).map((mangaName, i) => {
           const manga = mangas[mangaName];
