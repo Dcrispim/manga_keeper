@@ -1,19 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import Host from "../../Hosters/Host";
 import { MangaListType, MangaType } from "../../types/MangasTypes";
-import { getHost } from "../../utils";
-import { getThumb } from "../../utils/services";
-import { parseTitle } from "../../utils/text";
 import Details from "../Details";
 import {
-  Grid,
   PopUpContainer,
   SliderContainer,
   SliderItem,
   ThumbImg,
-  TitleItem,
+  TitleItem
 } from "./styles";
 
 // import { Container } from './styles';

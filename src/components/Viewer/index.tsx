@@ -1,20 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Host from "../../Hosters/Host";
 import { MangaType } from "../../types/MangasTypes";
 import { getHost, mockCapList } from "../../utils";
-import { getThumb } from "../../utils/services";
-import { parseTitle } from "../../utils/text";
 import PopUp from "../PopUp";
-import {
-  Grid,
-  PopUpContainer,
-  SliderContainer,
-  SliderItem,
-  ThumbImg,
-  TitleItem,
-} from "./styles";
 
 // import { Container } from './styles';
 

@@ -1,29 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Host from "../../Hosters/Host";
 import { MangaType } from "../../types/MangasTypes";
 import { getHost } from "../../utils";
-import { getThumb } from "../../utils/services";
-import { parseTitle } from "../../utils/text";
 import PopUp from "../PopUp";
-import {
-  Grid,
-  PopUpContainer,
-  SliderContainer,
-  SliderItem,
-  ThumbImg,
-  TitleItem,
-} from "./styles";
 
 // import { Container } from './styles';
 
 const Extension: React.FC = () => {
   const [mangas, setMangas] = useState<{ [manga: string]: MangaType }>({});
-  const [host, setHostName] = useState<Host | null>(null);
-  const [focus, setFocus] = useState<MangaType & { title: string }>({});
-    console.log(host);
-    
+  const [host, setHostName] = useState<Host | null>(null);    
   useEffect(() => {
     updateMangaList();
     let queryOptions = { active: true, currentWindow: true };
