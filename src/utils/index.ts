@@ -1,4 +1,5 @@
 import Host from "../Hosters/Host";
+import MangaClash from "../Hosters/MangaClash";
 import Mangalivre from "../Hosters/MangaLivre";
 import SuperMangas from "../Hosters/SuperMangas";
 import { MangaListType, MangaType } from "../types/MangasTypes";
@@ -37,6 +38,8 @@ export const getHost = (windowHost?: string): Host | undefined => {
       return new Mangalivre(windowHost);
     } else if (windowHost?.includes("supermangas.site")) {
       return new SuperMangas(windowHost);
+    } else if (windowHost?.includes("mangaclash.com")) {
+      return new MangaClash(windowHost);
     }
   }
 };

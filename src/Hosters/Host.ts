@@ -67,7 +67,7 @@ export default class Host {
 
       cap.lastCap = currentCap;
       cap.lastSource = this.host;
-      cap.thumb = this.thumb;
+      cap.thumb = this.thumb.length>0 ? this.thumb : cap.thumb;
 
       if (!isNaN(parseFloat(currentCap))) {
         const highCap =
