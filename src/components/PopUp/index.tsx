@@ -3,12 +3,15 @@ import React, { useMemo, useState } from "react";
 import Host from "../../Hosters/Host";
 import { MangaListType, MangaType } from "../../types/MangasTypes";
 import Details from "../Details";
+import { configCardData } from "../SystemCards/Config/configCardData";
+import { listCardData } from "../SystemCards/List/listCardData";
+import { tagCardData } from "../SystemCards/Tags/tagCardData";
 import {
   PopUpContainer,
   SliderContainer,
-  SliderItem,
+  SliderItemContainer,
   ThumbImg,
-  TitleItem
+  TitleItem,
 } from "./styles";
 
 // import { Container } from './styles';
@@ -58,6 +61,27 @@ const PopUp: React.FC<Props> = ({
       ) : (
         <PopUpContainer>
           <SliderContainer>
+            <SliderItem
+              onMouseOver={() => {}}
+              onClick={() => {}}
+              data={configCardData}
+              key={"config-card"}
+              label="Config"
+            />
+            <SliderItem
+              onMouseOver={() => {}}
+              onClick={() => {}}
+              data={tagCardData}
+              key={"tag-card"}
+              label="Tags"
+            />
+             <SliderItem
+              onMouseOver={() => {}}
+              onClick={() => {}}
+              data={listCardData}
+              key={"list-card"}
+              label="List"
+            />
             {Object.keys(mangas)
               .sort((a, b) =>
                 (mangas[a]?.lastTime || 0) < (mangas[b].lastTime || 0) ? 1 : -1
@@ -67,22 +91,12 @@ const PopUp: React.FC<Props> = ({
                 return (
                   <SliderItem
                     onMouseOver={() => setFocus({ ...manga, title: mangaName })}
-                    padding={8}
-                    key={i}
-                  >
-                    <a href={manga.lastSource} target="blank">
-                      <ThumbImg src={manga.thumb} />
-                    </a>
-                    <TitleItem>
-                      <label
-                        onClick={() =>
-                          handleDetails({ ...manga, title: mangaName })
-                        }
-                      >
-                        Details
-                      </label>
-                    </TitleItem>
-                  </SliderItem>
+                    onClick={() =>
+                      handleDetails({ ...manga, title: mangaName })
+                    }
+                    data={manga}
+                    key={i.toString()}
+                  />
                 );
               })}
           </SliderContainer>
@@ -92,5 +106,23 @@ const PopUp: React.FC<Props> = ({
   );
 };
 
+const SliderItem: React.FC<{
+  onMouseOver: () => void;
+  onClick: () => void;
+  data: MangaType;
+  key?: string;
+  label?: string;
+}> = ({ onMouseOver, onClick, data, key, label }) => {
+  return (
+    <SliderItemContainer onMouseOver={onMouseOver} padding={8} key={key}>
+      <a href={data.lastSource} target="blank">
+        <ThumbImg src={data.thumb} />
+      </a>
+      <TitleItem>
+        <label onClick={onClick}>{label || "Details"}</label>
+      </TitleItem>
+    </SliderItemContainer>
+  );
+};
 
 export default PopUp;

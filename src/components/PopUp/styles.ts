@@ -37,7 +37,7 @@ export const SliderContainer = styled.div`
   user-select: none;
 `;
 
-export const SliderItem = styled.div<{ padding: number }>`
+export const SliderItemContainer = styled.div<{ padding: number }>`
   @keyframes hover-img-in {
     from {
       transform: scale(1);
