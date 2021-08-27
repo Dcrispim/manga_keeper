@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useMemo, useState } from "react";
-import styled from "styled-components";
 import Host from "../../Hosters/Host";
 import { MangaListType, MangaType } from "../../types/MangasTypes";
 import Details from "../Details";
@@ -23,11 +22,13 @@ type Props = {
   handleClearAll?: () => void;
 };
 
+type MangaFocusType = MangaType & { title?: string };
 const PopUp: React.FC<Props> = ({
   mangas,
   handleLinkManga,
   handleRemoveManga,
 }) => {
+  const [focus, setFocus] = useState({} as MangaFocusType);
   const [details, setDetails] = useState(
     window.location.href.includes("localhost")
       ? ({
@@ -55,59 +56,41 @@ const PopUp: React.FC<Props> = ({
           handleRemoveManga={handleRemoveManga}
         />
       ) : (
-    <PopUpContainer>
-      <SliderContainer>
+        <PopUpContainer>
+          <SliderContainer>
             {Object.keys(mangas)
               .sort((a, b) =>
                 (mangas[a]?.lastTime || 0) < (mangas[b].lastTime || 0) ? 1 : -1
               )
               .map((mangaName, i) => {
-          const manga = mangas[mangaName];
-          return (
-            <SliderItem
-              onMouseOver={() => setFocus({ ...manga, title: mangaName })}
-              padding={8}
-              key={i}
-            >
-              <a href={manga.lastSource} target="blank">
-                <ThumbImg src={manga.thumb} />
-              </a>
-              <TitleItem>
+                const manga = mangas[mangaName];
+                return (
+                  <SliderItem
+                    onMouseOver={() => setFocus({ ...manga, title: mangaName })}
+                    padding={8}
+                    key={i}
+                  >
+                    <a href={manga.lastSource} target="blank">
+                      <ThumbImg src={manga.thumb} />
+                    </a>
+                    <TitleItem>
                       <label
                         onClick={() =>
                           handleDetails({ ...manga, title: mangaName })
                         }
                       >
                         Details
-                </label>
-              </TitleItem>
-            </SliderItem>
-          );
-        })}
-      </SliderContainer>
-    </PopUpContainer>
+                      </label>
+                    </TitleItem>
+                  </SliderItem>
+                );
+              })}
+          </SliderContainer>
+        </PopUpContainer>
       )}
     </>
   );
 };
 
-const Thumb = ({ src }: { src?: string }) => {
-  return (
-    <div>
-      <ThumbContainer src={src} />
-    </div>
-  );
-};
-const ThumbContainer = styled.img`
-  width: 116px;
-  height: 180px;
-  object-fit: cover;
-
-  background-color: #eee;
-  top: 0px !important;
-  z-index: 10;
-
-  -webkit-user-drag: none;
-`;
 
 export default PopUp;
