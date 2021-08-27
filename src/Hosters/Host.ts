@@ -106,6 +106,7 @@ export default class Host {
       cap.lastCap = currentCap;
       cap.lastSource = this.host;
       cap.thumb = this.thumb.length>0 ? this.thumb : cap.thumb;
+      cap.lastTime = Date.now();
 
       if (!isNaN(parseFloat(currentCap))) {
         const highCap =
