@@ -49,7 +49,11 @@ const PopUp: React.FC<Props> = ({
       ) : (
     <PopUpContainer>
       <SliderContainer>
-        {Object.keys(mangas).map((mangaName, i) => {
+            {Object.keys(mangas)
+              .sort((a, b) =>
+                (mangas[a]?.lastTime || 0) < (mangas[b].lastTime || 0) ? 1 : -1
+              )
+              .map((mangaName, i) => {
           const manga = mangas[mangaName];
           return (
             <SliderItem
