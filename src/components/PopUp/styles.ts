@@ -19,7 +19,7 @@ export const SliderWrapper = styled.div`
 
 export const SliderContainer = styled.div`
   display: grid;
-  margin-top: 32px;
+  margin-top: 16px;
   grid-template-columns: 1fr 1fr 1fr;
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -123,8 +123,11 @@ export const TitleItem = styled.div`
   
   label {
     font-size: 20px;
-    color: white;
+    color: gray;
     cursor: grab;
+    :hover{
+      color: white;
+    }
   }
   top: -24px;
   align-self: center;
