@@ -28,7 +28,14 @@ const PopUp: React.FC<Props> = ({
   handleLinkManga,
   handleRemoveManga,
 }) => {
-  const [focus, setFocus] = useState<MangaType & { title: string }>({});
+  const [details, setDetails] = useState(
+    window.location.href.includes("localhost")
+      ? ({
+          ...mangas["peerless-dad"],
+          title: "peerless-dad",
+        } as MangaFocusType)
+      : {}
+  );
 
   return (
     <>
