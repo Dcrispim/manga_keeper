@@ -30,13 +30,41 @@ export default class Host {
   showLastCap(): void {
     chrome.storage.local.get(null, (caplist) => {
       const [mangaName, currentCap] = getNameCap(this.mangaName, caplist);
-      console.log({ caplist, mangaName, currentCap });
-      if (typeof currentCap === "object" && !currentCap?.thumb) {
+      console.log({ currentCap, type: typeof currentCap, mangaName });
+
+      if (typeof currentCap === "object") {
+        const cats = currentCap?.categories || [];
+        const alias = currentCap.alias || [];
+        this.categories?.map((thisCat) => {
+          if (
+            !cats.find(
+              (c) => c.name.toLowerCase() === thisCat.name.toLowerCase()
+            )
+          ) {
+            cats.push({ ...thisCat, name: thisCat.name.toLowerCase() });
+          }
+          return null;
+        });
+
+        this.alias?.map((thisCat) => {
+          if (!alias.includes(thisCat.toLowerCase())) {
+            alias.push(thisCat.toLowerCase());
+          }
+          return null;
+        });
+        console.log({ alias, cats });
         chrome.storage.local.set(
           {
             [mangaName]: {
               ...currentCap,
-              thumb: this.thumb,
+              thumb: currentCap.thumb || this.thumb,
+              categories: [...cats],
+              alias,
+              sources: {
+                ...currentCap.sources,
+                [window.location.hostname]: window.location.hostname,
+              },
+              lastSource: currentCap.lastSource || window.location.href,
             },
           },
           () => {
