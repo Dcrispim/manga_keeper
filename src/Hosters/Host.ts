@@ -7,25 +7,35 @@ export default class Host {
   constructor(host: string) {
     this.host = host;
   }
+  get lastCap(): string {
+    throw Error("LASTCAP method is not implemented");
+  }
 
-  get mangaName(): string {
-    throw Error("method not implemented");
+  get alias(): string[] {
+    throw Error("ALIAS method is not implemented");
+  }
+
+  get categories(): { name: string; link?: string }[] {
+    throw Error("CATEGORIES method is not implemented");
+  }
+  get progress(): string {
+    throw Error("PROGRESS method is not implemented");
   }
 
   get mangaCap(): string {
-    throw Error("method not implemented");
+    throw Error("MANGACAP method is not implemented");
   }
 
   get isListPage(): boolean {
-    throw Error("method not implemented");
+    throw Error("ISLISTPAGE method is not implemented");
   }
 
   get isCapPage(): boolean {
-    throw Error("method not implemented");
+    throw Error("ISCAPPAGE method is not implemented");
   }
 
   get thumb(): string {
-    throw Error("method not implemented");
+    throw Error("THUMB method is not implemented");
   }
   showLastCap(): void {
     chrome.storage.local.get(null, (caplist) => {
