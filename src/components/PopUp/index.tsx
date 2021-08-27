@@ -37,6 +37,14 @@ const PopUp: React.FC<Props> = ({
       : {}
   );
 
+  const hasDetails = useMemo(() => Object.keys(details).length > 0, [details]);
+  const handleDetails = (info: MangaFocusType) => {
+    setDetails(info);
+  };
+  const handleBackFromDetails = () => {
+    setDetails({} as MangaFocusType);
+  };
+
   return (
     <>
       {hasDetails ? (
@@ -65,11 +73,12 @@ const PopUp: React.FC<Props> = ({
                 <ThumbImg src={manga.thumb} />
               </a>
               <TitleItem>
-                <label onClick={() => handleRemoveManga(mangaName)}>
-                  <a>Del</a>
-                </label>
-                <label onClick={() => handleLinkManga(manga, mangaName)}>
-                  <a>join</a>
+                      <label
+                        onClick={() =>
+                          handleDetails({ ...manga, title: mangaName })
+                        }
+                      >
+                        Details
                 </label>
               </TitleItem>
             </SliderItem>
@@ -77,6 +86,8 @@ const PopUp: React.FC<Props> = ({
         })}
       </SliderContainer>
     </PopUpContainer>
+      )}
+    </>
   );
 };
 
