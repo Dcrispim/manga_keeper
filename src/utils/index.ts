@@ -1,6 +1,7 @@
 import Host from "../Hosters/Host";
 import MangaClash from "../Hosters/MangaClash";
 import Mangalivre from "../Hosters/MangaLivre";
+import MangaYabu from "../Hosters/MangaYabu";
 import SuperMangas from "../Hosters/SuperMangas";
 import { MangaListType, MangaType } from "../types/MangasTypes";
 
@@ -14,7 +15,6 @@ export const getNameCap = (
   mangaName: string,
   capList: MangaListType
 ): [string, MangaType] => {
-  console.log({ mangaName, capList });
   const name = Object.keys(capList).find((capName) => {
     return mangaName === capName || capList[capName].alias?.includes(mangaName);
   });
@@ -30,6 +30,7 @@ export const runHost = (windowHost: string) => {
 const adapters: { [a: string]: typeof Host } = {
   "mangalivre.net": Mangalivre,
   "supermangas.site": Host,
+  "mangaclash.com": MangaClash,
 };
 
 export const getHost = (windowHost?: string): Host | undefined => {
@@ -58,6 +59,62 @@ export const getDiff = (a: string, b: string) => {
     j++;
   }
   return result.length / max.length;
+};
+
+export const toFloat = (num: string | number) => {
+  let normalized = num.toString().replaceAll("-", ".").replaceAll("_", ".");
+  return parseFloat(normalized);
+};
+
+const agregateCaps = (caps: (string | number)[]) => {
+  const out = caps
+    .sort((a, b) => (toFloat(a) > toFloat(b) ? 1 : -1))
+    .reduce((list, cap) => {
+      const normalizedcap = toFloat(cap);
+      const lastCap = list[list.length - 1] || "0";
+      let outList = [...list];
+      if (lastCap?.includes("-")) {
+        const [start, end] = lastCap.split("-");
+        const delta = normalizedcap - toFloat(end);
+        if (delta < 1) {
+          const decimalDelta =
+            toFloat(normalizedcap.toString().split(".")[1] || "0") -
+            toFloat(toFloat(end).toString().split(".")[1] || "0");
+          if (decimalDelta > 1) {
+            outList.push(normalizedcap.toString());
+          } else {
+            outList = [
+              ...outList.slice(0, -1),
+              `${start || 0}-${normalizedcap}`,
+            ];
+          }
+        } else {
+          if (delta > 1) {
+            outList.push(normalizedcap.toString());
+          } else {
+            outList = [
+              ...outList.slice(0, -1),
+              `${start || 0}-${normalizedcap}`,
+            ];
+          }
+        }
+      } else {
+        const delta = normalizedcap - toFloat(lastCap);
+        if (delta > 1) {
+          outList.push(normalizedcap.toString());
+        } else if (delta != 0) {
+          outList = [
+            ...outList.slice(0, -1),
+            `${lastCap || 0}-${normalizedcap}`,
+          ];
+        } else {
+          outList = [...outList.slice(0, -1), `${lastCap}`];
+        }
+      }
+      return outList;
+    }, [] as string[]);
+
+  return out;
 };
 
 export const mockCapList: MangaListType = {
@@ -101,11 +158,33 @@ export const mockCapList: MangaListType = {
       "https://static3.mangalivre.net/cdnwp3/capas/_tqh-fUkx9XLteQwVRwVvA/10577/external_cover.jpg?quality=100",
   },
   "peerless-dad": {
-    alias: ["abhishek"],
-    highCap: 42,
-    lastCap: "42",
-    lastSource:
-      "https://mangalivre.net/ler/peerless-dad/online/203416/capitulo-42",
+    alias: ["abhishek", "abyssinian", "아비무쌍"],
+    categories: [
+      {
+        link: "https://mangalivre.net/mangas/acao/23",
+        name: "ação",
+      },
+      {
+        link: "https://mangalivre.net/mangas/artes-marciais/36",
+        name: "artes marciais",
+      },
+      {
+        link: "https://mangalivre.net/mangas/comedia/26",
+        name: "comédia",
+      },
+      {
+        link: "https://mangalivre.net/mangas/drama/29",
+        name: "drama",
+      },
+      {
+        link: "https://mangalivre.net/mangas/fantasia/30",
+        name: "fantasia",
+      },
+      {
+        link: "https://mangalivre.net/mangas/slice-of-life/48",
+        name: "slice of life",
+      },
+    ],
     thumb:
       "https://static3.mangalivre.net/cdnwp3/capas/kA1baJxRIIL5AX-S3NIj8Q/8089/external_cover.jpg?quality=100",
   },
