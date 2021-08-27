@@ -38,6 +38,8 @@ export const getHost = (windowHost?: string): Host | undefined => {
       return new Mangalivre(windowHost);
     } else if (windowHost?.includes("supermangas.site")) {
       return new SuperMangas(windowHost);
+    } else if (windowHost?.includes("mangayabu.top")) {
+      return new MangaYabu(windowHost);
     } else if (windowHost?.includes("mangaclash.com")) {
       return new MangaClash(windowHost);
     }
