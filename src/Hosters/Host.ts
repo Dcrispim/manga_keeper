@@ -101,8 +101,6 @@ export default class Host {
     const currentCap = this.mangaCap;
     chrome.storage.local.get(null, (caplist: MangaListType) => {
       const [mangaName, cap] = getNameCap(this.mangaName, caplist);
-      console.log(mangaName);
-
       cap.lastCap = currentCap;
       cap.lastSource = this.host;
       cap.thumb = this.thumb.length>0 ? this.thumb : cap.thumb;
@@ -122,10 +120,12 @@ export default class Host {
       });
     });
   }
-
+  pageEvent() {
+    console.log("pageEvent");
+  }
   run() {
     console.log("INIT HOST", this.isListPage);
-
+    this.pageEvent();
     if (this.isListPage) this.showLastCap();
     else if (this.isCapPage) this.addLastCap();
   }
