@@ -8,7 +8,7 @@
   "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
   "content_scripts": [
     {
-      "matches": ["https://mangalivre.net/*", "https://www.supermangas.site/*"],
+      "matches": ["https://mangalivre.net/*", "https://www.supermangas.site/*","https://mangayabu.top/*", "https://mangaclash.com/*"],
       "js": ["./static/js/content.js"],
       "all_frames": false,
       "run_at": "document_end"
