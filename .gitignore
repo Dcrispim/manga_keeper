@@ -25,3 +25,5 @@ Images/Show.png
 
 *.zip
 Images/
+_old
+.vscode/tasks.json
