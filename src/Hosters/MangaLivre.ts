@@ -67,6 +67,48 @@ export default class Mangalivre extends Host {
     return this.host.split("/").includes("manga");
   }
 
+  getAll = () => {
+    const getThumb = (el) =>
+      el
+        .querySelector("div.cover-image")
+        .style.backgroundImage.match(/(?<=url\(\")(.*)(?=\"\))/)[0]
+        .toString();
+
+    const getTitle = (el) =>
+      el.querySelector("span.series-title").innerText.toLowerCase();
+
+    const getTags = (el) =>
+      Array.from(el.querySelectorAll("span.button"))
+        .filter((e) => e.querySelector("img") === null)
+        .map((e) => e.innerText.toLowerCase());
+
+    const a = Array.from(document.querySelectorAll("li>a.link-block"));
+
+    const c = a.reduce(
+      (obj, title) => ({
+        ...obj,
+        [getTitle(title)]: {
+          lastUpdate: new Date().getTime(),
+          thumb: getThumb(title),
+          tags: getTags(title),
+          link: title.href,
+          chapters: title
+            .querySelector("span.series-chapters")
+            ?.innerText?.trim(),
+        },
+      }),
+      {}
+    );
+    localStorage.setItem(
+      "listAll",
+      JSON.stringify({
+        ...c,
+        ...JSON.parse(localStorage.getItem("listAll") || "{}"),
+      })
+    );
+    return c;
+  };
+
   pageEvent() {
     if (this.isCapPage) {
       const toolsContainer = document.querySelector<HTMLDivElement>(
@@ -180,7 +222,6 @@ export default class Mangalivre extends Host {
             )?.innerText || "";
 
           if (capList[destaqName]?.lastCap?.toString() === destaqCap) {
-
             destaq.appendChild(isRead);
           }
         });
