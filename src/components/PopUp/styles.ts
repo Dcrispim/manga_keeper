@@ -5,7 +5,7 @@ const THUMB_SIZE = {
   W: 116,
 };
 
-const TITLE_ITEM_BG =' #000a'
+const TITLE_ITEM_BG = " #000a";
 
 export const SliderWrapper = styled.div`
   width: 100%;
@@ -120,12 +120,12 @@ export const TitleItem = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${TITLE_ITEM_BG};
-  
+
   label {
     font-size: 20px;
     color: gray;
     cursor: grab;
-    :hover{
+    :hover {
       color: white;
     }
   }
@@ -211,5 +211,11 @@ export const PopUpContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 500px;
+  width: 500px;
+`;
+
+export const TopLineMenu = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 `;
