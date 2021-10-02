@@ -1,15 +1,15 @@
 export type MangaType = {
-  lastCap: string | number;
-  highCap: string | number;
-  lastSource: string;
+  lastCap?: string | number;
+  highCap?: string | number;
+  lastSource?: string;
   lastTime?: number;
   thumb?: string;
   alias?: string[];
   sources?: { [hostname: string]: string };
   history?: {
-    [timestamp: number]: string;
+    [chapter: number | string]: { source: string; timestamp: number };
   };
-  categories: {
+  categories?: {
     name: string;
     link?: string;
   }[];
