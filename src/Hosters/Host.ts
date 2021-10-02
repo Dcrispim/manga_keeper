@@ -33,6 +33,9 @@ export default class Host {
   get isCapPage(): boolean {
     throw Error("ISCAPPAGE method is not implemented");
   }
+  get mangaName(): string {
+    throw Error("ISMANGANAME method is not implemented");
+  }
 
   get thumb(): string {
     throw Error("THUMB method is not implemented");
@@ -103,8 +106,9 @@ export default class Host {
       const [mangaName, cap] = getNameCap(this.mangaName, caplist);
       cap.lastCap = currentCap;
       cap.lastSource = this.host;
-      cap.thumb = this.thumb.length>0 ? this.thumb : cap.thumb;
+      cap.thumb = this.thumb.length > 0 ? this.thumb : cap.thumb;
       cap.lastTime = Date.now();
+     
 
       if (!isNaN(parseFloat(currentCap))) {
         const highCap =
