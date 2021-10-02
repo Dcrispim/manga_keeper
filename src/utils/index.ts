@@ -1,3 +1,4 @@
+import Config from "../Hosters/Config";
 import Host from "../Hosters/Host";
 import MangaClash from "../Hosters/MangaClash";
 import Mangalivre from "../Hosters/MangaLivre";
@@ -23,27 +24,25 @@ export const getNameCap = (
 };
 
 export const runHost = (windowHost: string) => {
-  console.log(windowHost);
-  debugger;
   getHost(windowHost)?.run();
 };
 const adapters: { [a: string]: typeof Host } = {
   "mangalivre.net": Mangalivre,
   "supermangas.site": Host,
   "mangaclash.com": MangaClash,
+  "dcrispim.github.io/mangakeeper-config": Config,
+  "mangayabu.top": MangaYabu,
+  localhost: Config,
+  host: Host,
 };
 
 export const getHost = (windowHost?: string): Host | undefined => {
   if (windowHost) {
-    if (windowHost?.includes("mangalivre.net")) {
-      return new Mangalivre(windowHost);
-    } else if (windowHost?.includes("supermangas.site")) {
-      return new SuperMangas(windowHost);
-    } else if (windowHost?.includes("mangayabu.top")) {
-      return new MangaYabu(windowHost);
-    } else if (windowHost?.includes("mangaclash.com")) {
-      return new MangaClash(windowHost);
-    }
+    const Hoster =
+      adapters[
+        Object.keys(adapters).find((key) => windowHost.includes(key)) || "host"
+      ];
+    return Hoster ? new Hoster(windowHost) : new Host(windowHost);
   }
 };
 
