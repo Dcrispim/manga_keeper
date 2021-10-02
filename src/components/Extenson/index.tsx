@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Host from "../../Hosters/Host";
-import { MangaType } from "../../types/MangasTypes";
+import { MangaListType, MangaType } from "../../types/MangasTypes";
 import { getHost } from "../../utils";
 import PopUp from "../PopUp";
 
@@ -10,7 +10,7 @@ import PopUp from "../PopUp";
 
 const Extension: React.FC = () => {
   const [mangas, setMangas] = useState<{ [manga: string]: MangaType }>({});
-  const [host, setHostName] = useState<Host | null>(null);    
+  const [host, setHostName] = useState<Host | null>(null);
   useEffect(() => {
     updateMangaList();
     let queryOptions = { active: true, currentWindow: true };
@@ -62,11 +62,22 @@ const Extension: React.FC = () => {
       updateMangaList();
     });
   };
+
+  const handleUpdateManga = (
+    mangalist: MangaListType,
+    callback?: () => void
+  ) => {
+    chrome?.storage.local.set({...mangalist}, () => {
+      setMangas(mangalist)
+      callback?.();
+    });
+  };
   return (
     <PopUp
       mangas={mangas}
       handleLinkManga={handleLinkManga}
       handleRemoveManga={handleRemoveManga}
+      handleUpdateManga={handleUpdateManga}
     />
   );
 };
