@@ -14,9 +14,13 @@ export default class Config extends Host {
     return false;
   }
 
+  get toUpload(): MangaListType {
+    return JSON.parse(localStorage.getItem("mangakeeper.toUpload") || "{}");
+  }
+
   handleUpdateTitleList = (fr: FileReader) => {
     const newSub: MangaListType = JSON.parse(String(fr.result));
-    this.handleUpdateManga(newSub, () => alert("w"));
+    this.handleUpdateManga(newSub, () => {});
   };
 
   handleUpdateManga = (mangalist: MangaListType, callback?: () => void) => {
@@ -33,67 +37,28 @@ export default class Config extends Host {
       // FileReader support
       if (FileReader && files && files.length) {
         let fr = new FileReader();
-        alert("b");
         fr.onload = () => callback(fr, files[0]?.name);
         fr.readAsText(files[0]);
       }
     };
 
-  addOnclikEvent(id: string, callback: (evt: unknown) => void) {
-    if (document.querySelector(id) !== null) {
-      this.addEvent(id, "click", callback);
-    }
-  }
-
-  get lists() {
-    return document.querySelector("#config-lists")?.getAttribute("value");
-  }
-
-  addEvent(
-    id: string,
-    event: keyof HTMLElementEventMap | keyof HTMLElementEventMap[],
-    callback: (evt: unknown) => void
-  ) {
-    console.log(`adding event on ${event.toString()} in ${id}`);
-
-    if (document.querySelector(id) !== null) {
-      if (typeof event === "object") {
-        (event as Array<keyof HTMLElementEventMap>).map((e) => {
-          return document.querySelector(id)?.addEventListener(e, callback);
-        });
-      } else if (typeof event === "string") {
-        document.querySelector(id)?.addEventListener(event, callback);
-      }
-    }
-  }
   run() {
     console.log("init");
-    //var _abelha  = 'abelha'
-    this.addOnclikEvent("#config-alert", () => {
-      console.log("alert");
-    });
+    chrome.storage.local.set(
+      {
+        ...this.toUpload,
+      },
+      () => {
+        console.log("Updated informations,", this.toUpload);
+        localStorage.removeItem("mangakeeper.toUpload");
+      }
+    );
     chrome.storage.local.get(
       null,
-      ({ __configs__, __lists__, ...chapterList }: MangaListType) => {
+      ({ ...chapterList }: MangaListType) => {
         localStorage.setItem(
           "mangakeeper.mangaList",
           JSON.stringify(chapterList)
-        );
-        localStorage.setItem(
-          "mangakeeper.lastUpdate",
-          String(new Date().getTime())
-        );
-
-        this.addEvent(
-          "#config-upload-mangas",
-          "change",
-          this.getLocalFile(this.handleUpdateTitleList)
-        );
-
-        this.addEvent(
-          "#config-upload-lists",
-          "click",
-          this.getLocalFile(this.handleUpdateTitleList)
         );
       }
     );

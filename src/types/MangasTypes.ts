@@ -17,4 +17,10 @@ export type MangaType = {
 
 export type MangaListType = {
   [name: string]: MangaType;
+} | { "mangakeeper.configs": ConfigType };
+
+export type ConfigType = {
+  onlyread: boolean;
+  startonlyread: boolean;
+  homelist: string;
 };

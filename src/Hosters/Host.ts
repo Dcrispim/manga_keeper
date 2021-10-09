@@ -1,4 +1,4 @@
-import { MangaListType } from "../types/MangasTypes";
+import { ConfigType, MangaListType } from "../types/MangasTypes";
 import { capAlert, getNameCap } from "../utils";
 
 export default class Host {
@@ -27,14 +27,14 @@ export default class Host {
   }
 
   get isListPage(): boolean {
-    throw Error("ISLISTPAGE method is not implemented");
+    return false;
   }
 
   get isCapPage(): boolean {
-    throw Error("ISCAPPAGE method is not implemented");
+    return false;
   }
   get mangaName(): string {
-    throw Error("ISMANGANAME method is not implemented");
+    throw Error("ISMANGANAMEPAGE method is not implemented");
   }
 
   get thumb(): string {
@@ -44,6 +44,8 @@ export default class Host {
     chrome.storage.local.get(null, (caplist) => {
       const [mangaName, currentCap] = getNameCap(this.mangaName, caplist);
       console.log({ currentCap, type: typeof currentCap, mangaName });
+
+      const config: ConfigType = caplist["mangakeeper.configs"];
 
       if (typeof currentCap === "object") {
         const cats = currentCap?.categories || [];
@@ -66,27 +68,31 @@ export default class Host {
           return null;
         });
         console.log({ alias, cats });
-        chrome.storage.local.set(
-          {
-            [mangaName]: {
-              ...currentCap,
-              thumb: currentCap.thumb || this.thumb,
-              categories: [...cats],
-              alias,
-              sources: {
-                ...currentCap.sources,
-                [window.location.hostname]: window.location.hostname,
+        console.table(config)
+        if (!config?.startonlyread) {
+          chrome.storage.local.set(
+            {
+              [mangaName]: {
+                ...currentCap,
+                thumb: currentCap.thumb || this.thumb,
+                categories: [...cats],
+                alias,
+                sources: {
+                  ...currentCap.sources,
+                  [window.location.hostname]: window.location.hostname,
+                },
+                lastSource: currentCap.lastSource || window.location.href,
               },
-              lastSource: currentCap.lastSource || window.location.href,
             },
-          },
-          () => {
-            console.log(
-              "The " + mangaName + " Thumb was updated to: ",
-              this.thumb
-            );
-          }
-        );
+            () => {
+              console.log(
+                "The " + mangaName + " Thumb was updated to: ",
+                this.thumb
+              );
+             
+            }
+          );
+        }
       }
       if (currentCap.lastCap) {
         capAlert(currentCap);
@@ -106,9 +112,13 @@ export default class Host {
       const [mangaName, cap] = getNameCap(this.mangaName, caplist);
       cap.lastCap = currentCap;
       cap.lastSource = this.host;
-      cap.thumb = this.thumb.length > 0 ? this.thumb : cap.thumb;
+      cap.thumb = this.thumb?.length > 0 ? this.thumb : cap.thumb;
       cap.lastTime = Date.now();
-     
+      cap.history = cap.history ? { ...cap.history } : {};
+      cap.history[currentCap] = {
+        timestamp: Date.now(),
+        source: this.host,
+      };
 
       if (!isNaN(parseFloat(currentCap))) {
         const highCap =
@@ -127,6 +137,7 @@ export default class Host {
   pageEvent() {
     console.log("pageEvent");
   }
+
   run() {
     console.log("INIT HOST", this.isListPage);
     this.pageEvent();

@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+
 import React, { useMemo, useState } from "react";
 import Host from "../../Hosters/Host";
-import { MangaListType, MangaType } from "../../types/MangasTypes";
+import { ConfigType, MangaListType, MangaType } from "../../types/MangasTypes";
 import Details from "../Details";
 import ConfigCard from "../SystemCards/Config";
 import { configCardData } from "../SystemCards/Config/configCardData";
@@ -15,7 +16,7 @@ import {
   SliderItemContainer,
   ThumbImg,
   TitleItem,
-  TopLineMenu,
+  TopLineMenu
 } from "./styles";
 
 // import { Container } from './styles';
@@ -40,8 +41,6 @@ const PopUp: React.FC<Props> = ({
   const [focus, setFocus] = useState({} as MangaFocusType);
   const [details, setDetails] = useState({} as MangaType);
 
-  const [mangaList, setMangaList] = useState(getMangas(mangas));
-
   const hasDetails = useMemo(() => Object.keys(details).length > 0, [details]);
   const handleDetails = (info: MangaFocusType) => {
     setDetails(info);
@@ -53,7 +52,6 @@ const PopUp: React.FC<Props> = ({
   const [systemCard, setSystemCard] = useState<"" | "tag" | "config" | "list">(
     ""
   );
-
   return (
     <>
       {hasDetails ? (
@@ -94,7 +92,7 @@ const PopUp: React.FC<Props> = ({
               key={"list-card"}
               label="List"
             />
-            {Object.keys(mangaList).map((mangaName, i) => {
+            {getMangas(mangas).map((mangaName, i) => {
               const manga = mangas[mangaName];
               return (
                 <SliderItem
@@ -180,13 +178,35 @@ const withTopMenu = (
   );
 };
 
-const getMangas = (mangas: MangaListType): MangaListType => {
+const getMangas = (mangas: MangaListType): string[] => {
   return Object.keys(mangas)
-    .filter((title) => !title.includes("__"))
+    .filter((title) =>
+      !title.includes('mangakeeper.')
+        ? parseConfigFilter(
+            mangas[title] as MangaType,
+            mangas["mangakeeper.configs"] as ConfigType
+          )
+        : false
+    )
     .sort((a, b) =>
       (mangas[a]?.lastTime || 0) < (mangas[b].lastTime || 0) ? 1 : -1
-    )
-    .reduce((p, c) => ({ ...p, [c]: mangas[c] }), {});
+    );
 };
 
+const parseConfigFilter = (manga: MangaType, configs: ConfigType): boolean => {
+  let outFilter = true;
+  if(!configs) return true
+
+  if (configs?.onlyread) {
+    outFilter = outFilter && !!manga.lastCap;
+  }
+
+  if (configs?.homelist && configs?.homelist !== "null") {
+    outFilter =
+      outFilter &&
+      !!manga.categories?.find((m) => m.name === configs?.homelist);
+  }
+
+  return outFilter;
+};
 export default PopUp;
